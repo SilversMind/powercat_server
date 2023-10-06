@@ -1,13 +1,13 @@
 {
     "sessions": [
         {
-            "id": "1",
+            "id": 0,
             "exercises": [
                 {"type":"bench", "set": 1, "reps": 2, "rpe": 3}
             ]
         },
         {
-            "id": "2",
+            "id": 1,
             "exercises": [
                 {"type":"squat", "set": 2, "reps": 3, "rpe": 3}
             ]

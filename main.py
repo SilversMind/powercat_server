@@ -1,4 +1,5 @@
-from typing import Union
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 import json
 from pathlib import Path
 from dataclasses import dataclass
@@ -6,6 +7,9 @@ from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from utils import compute_pr_by_repetition_number
+from powercat.settings import DB_URI
+
+# Init API Server
 app = FastAPI()
 
 origins = [
@@ -20,6 +24,9 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"])
 
+# Init MongoDB connection
+client = MongoClient(DB_URI, server_api=ServerApi('1'))
+DB = client["powercat"]
 
 class Item(BaseModel):
     PR: int
@@ -41,9 +48,20 @@ def write_PR_by_reps(item: Item):
     return rpe_tables
 
 @app.get("/training")
-def get_training():
-    with open(Path(__file__).parent / "trainings.json") as training_fin:
-        trainings = json.load(training_fin)
-        return trainings["TR1"]
+def get_current_training():
+    current_training_id = get_current_training_id()
+    return DB["training"].find_one({"id": current_training_id},{"_id": 0})
+
+@app.get("/finish_training")
+def update_training_id() -> None:
+    filter = {'last_session': {'$exists': True}}
+    update = {'$inc': {'last_session': 1}}
+    DB["training"].update_one(filter,  update)
+    
+def get_current_training_id() -> int:
+    data = DB["training"].find_one({"last_session": {"$exists": True}})
+    return data['last_session']
+
+
 
 
