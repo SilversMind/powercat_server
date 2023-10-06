@@ -1,0 +1,17 @@
+{
+    "sessions": [
+        {
+            "id": "1",
+            "exercises": [
+                {"type":"bench", "set": 1, "reps": 2, "rpe": 3}
+            ]
+        },
+        {
+            "id": "2",
+            "exercises": [
+                {"type":"squat", "set": 2, "reps": 3, "rpe": 3}
+            ]
+        }
+    ],
+    "last_session": null
+}
