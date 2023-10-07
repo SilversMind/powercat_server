@@ -36,6 +36,11 @@ class RPEDetails:
     weights: list[int]
     rpe: int
 
+@dataclass
+class Profile:
+    name: str
+    PR: dict[str: int]
+
 
 TABLE_SIZE = 12
 
@@ -57,6 +62,12 @@ def update_training_id() -> None:
     filter = {'last_session': {'$exists': True}}
     update = {'$inc': {'last_session': 1}}
     DB["training"].update_one(filter,  update)
+
+@app.get("/profile")
+def get_profile():
+    filter = {'name': "Lolo"}
+    projection = {"_id":0}
+    return DB["profile"].find_one(filter, projection)
     
 def get_current_training_id() -> int:
     data = DB["training"].find_one({"last_session": {"$exists": True}})

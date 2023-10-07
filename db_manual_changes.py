@@ -19,11 +19,12 @@ try:
     database_names = client.list_database_names()
     db = client["powercat"]
     collection = db['training']
-    filter = {'last_session': {'$exists': True}}
-    update = {'$set': {'last_session': 0}}
-    collection.update_one(filter,  update)
-    res = collection.find_one(filter)
-    print(res)
+    filter = {'name': {'$eq': "Lol"}}
+    # update = {'$set': {'last_session': 0}}
+    # collection.update_one(filter,  update)
+    res = collection.find()
+    print(list(res))
+    
 
 
 except Exception as e:

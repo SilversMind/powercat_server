@@ -1,0 +1,12 @@
+{
+    "profiles": [
+        {
+            "name": "Lolo",
+            "PR": {
+                "bench": 50,
+                "squat": 100,
+                "deadlift": 110
+            }
+        }
+    ]
+}
