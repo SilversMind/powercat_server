@@ -1,4 +1,3 @@
-from math import pow
 MINIMUM_WEIGHT_STEP = 2.5
 
 def compute_pr_by_repetition_number(PR: int, repetitions: int, rpe: int) -> int:

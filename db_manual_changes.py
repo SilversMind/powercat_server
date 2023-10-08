@@ -3,7 +3,7 @@ from pymongo.server_api import ServerApi
 from pathlib import Path
 from pymongo.collection import Collection
 import json
-from powercat.settings import DB_URI
+from src.settings import DB_URI
 
 def import_data(filename: str, collection: Collection) -> None:
      with open(Path(__file__).parent / filename) as training_fin:
@@ -19,9 +19,9 @@ try:
     database_names = client.list_database_names()
     db = client["powercat"]
     collection = db['training']
-    filter = {'name': {'$eq': "Lol"}}
-    # update = {'$set': {'last_session': 0}}
-    # collection.update_one(filter,  update)
+    filter = {'last_session': 1}
+    update = {'$set': {'last_session': 0}}
+    collection.update_one(filter, update)
     res = collection.find()
     print(list(res))
     
