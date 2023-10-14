@@ -7,10 +7,19 @@ from src.settings import DB_URI
 
 def import_data(filename: str, collection: Collection) -> None:
      with open(Path(__file__).parent / filename) as training_fin:
+        collection.delete_many({})
         trainings = json.load(training_fin)
-        for elem in trainings["sessions"]:
+        for elem in trainings:
             collection.insert_one(elem)
         collection.insert_one({"last_session": 0})
+        for res in list(collection.find()):
+            print(res)
+
+def reset_last_session_index(collection: Collection) -> None:
+    filter = {"last_session": {"$exists": True}}
+    update = {'$set': {'last_session': 1}}
+    collection.update_one(filter, update)
+    res = collection.find()
 
 # Create a new client and connect to the server
 client = MongoClient(DB_URI, server_api=ServerApi('1'))
@@ -19,11 +28,7 @@ try:
     database_names = client.list_database_names()
     db = client["powercat"]
     collection = db['training']
-    filter = {'last_session': 1}
-    update = {'$set': {'last_session': 0}}
-    collection.update_one(filter, update)
-    res = collection.find()
-    print(list(res))
+    reset_last_session_index(collection)
     
 
 
