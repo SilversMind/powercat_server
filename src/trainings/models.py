@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class Exercise(BaseModel):
-    type: str
+    exerciseName: str
     set: int
     reps: int
     rpe: float
@@ -10,3 +10,7 @@ class Exercise(BaseModel):
 class Training(BaseModel):
     id: int
     exercises: list[Exercise]
+    programId: int
+
+class ProfileName(BaseModel):
+    name: str

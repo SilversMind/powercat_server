@@ -6,12 +6,12 @@ import json
 from src.settings import DB_URI
 
 def import_data(filename: str, collection: Collection) -> None:
-     with open(Path(__file__).parent / filename) as training_fin:
+     with open(Path(__file__).parent / filename) as data_fin:
         collection.delete_many({})
-        trainings = json.load(training_fin)
-        for elem in trainings:
+        data = json.load(data_fin)
+        for elem in data:
             collection.insert_one(elem)
-        collection.insert_one({"last_session": 0})
+        # collection.insert_one({"last_session": 1})
         for res in list(collection.find()):
             print(res)
 
@@ -27,8 +27,13 @@ client = MongoClient(DB_URI, server_api=ServerApi('1'))
 try:
     database_names = client.list_database_names()
     db = client["powercat"]
-    collection = db['training']
-    reset_last_session_index(collection)
+    collection = db['profile']
+    # reset_last_session_index(collection)
+    # import_data("profiles.json", collection)
+    filter = {'name': 'Lolo'}
+    update = {'$set': {'current_training': 1}}
+    collection.update_one(filter, update)
+    print(collection.find_one(filter))
     
 
 

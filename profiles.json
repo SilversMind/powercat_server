@@ -1,0 +1,13 @@
+[
+    {
+        "name": "Lolo",
+        "PR": {
+            "bench": 50,
+            "squat": 100,
+            "deadlift": 110
+        },
+        "current_training": 1,
+        "current_program": 1,
+        "is_training_inprogress": false
+    }
+]
