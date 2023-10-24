@@ -29,11 +29,11 @@ try:
     db = client["powercat"]
     collection = db['profile']
     # reset_last_session_index(collection)
-    # import_data("profiles.json", collection)
-    filter = {'name': 'Lolo'}
-    update = {'$set': {'current_training': 1}}
-    collection.update_one(filter, update)
-    print(collection.find_one(filter))
+    import_data("profiles.json", collection)
+    #filter = {'name': 'Lolo'}
+    #update = {'$set': {'current_training': 1}}
+    #collection.update_one(filter, update)
+    print(list(collection.find()))
     
 
 

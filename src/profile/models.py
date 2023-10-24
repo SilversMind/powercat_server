@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 class Profile(BaseModel):
     name: str
-    PR: dict[str, int]
+    PR: dict[str, float]
     current_program: int
     current_training: int
-    is_training_inprogress: bool

@@ -5,12 +5,15 @@ class Exercise(BaseModel):
     set: int
     reps: int
     rpe: float
-    weight: int = None
+    weight: float = None
 
 class Training(BaseModel):
     id: int
     exercises: list[Exercise]
     programId: int
+
+class DetailedTraining(Training):
+    nbTrainings: int
 
 class ProfileName(BaseModel):
     name: str
