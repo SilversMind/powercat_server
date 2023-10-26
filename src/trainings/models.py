@@ -1,4 +1,10 @@
 from pydantic import BaseModel
+from typing import Dict, Optional
+
+ExerciseResults = Dict[str, bool]
+WorkoutResults = Dict[str, ExerciseResults]
+TrainingHistory = Optional[Dict[str, WorkoutResults]]
+
 
 class Exercise(BaseModel):
     exerciseName: str
@@ -15,5 +21,6 @@ class Training(BaseModel):
 class DetailedTraining(Training):
     nbTrainings: int
 
-class ProfileName(BaseModel):
+class TrainingResult(BaseModel):
     name: str
+    validatedSets: WorkoutResults

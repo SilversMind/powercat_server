@@ -7,7 +7,9 @@
             "deadlift": 110
         },
         "current_training": 1,
-        "current_program": 1
+        "current_program": 1,
+        "training_history": null,
+        "is_active": true
     },
     {
         "name": "Zouzou",
@@ -17,6 +19,8 @@
             "deadlift": 150
         },
         "current_training": 7,
-        "current_program": 1
+        "current_program": 1,
+        "training_history": null,
+        "is_active": true
     }
 ]
