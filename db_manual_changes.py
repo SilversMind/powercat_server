@@ -29,9 +29,9 @@ try:
     db = client["powercat"]
     collection = db['profile']
     # reset_last_session_index(collection)
-    import_data("profiles.json", collection)
-    filter = {'isActive': True}
-    # print((collection.find_one()))
+    # import_data("profiles.json", collection)
+    filter = {'name': "Lolo"}
+    print(collection.find_one(filter, {"current_training_results": 1, "_id": 0}))
 
 
 except Exception as e:

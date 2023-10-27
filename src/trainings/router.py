@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 from src.database import DB
-from src.trainings.models import Training, TrainingResult, DetailedTraining
+from src.trainings.models import Training, TrainingResult, DetailedTraining, ValidatedSetResponse, WorkoutResults
 from src.trainings.utils import compute_pr_by_repetition_number
 from src.profile.router import get_profile
+from pydantic import TypeAdapter
+
 
 trainings_router = APIRouter(prefix="/training")
 
@@ -21,14 +23,40 @@ def get_current_training(username: str) -> DetailedTraining:
 @trainings_router.post("/finish")
 def update_training_id(item: TrainingResult) -> None:
     user = get_profile(item.name)
-    training_history = user.training_history
+    
+    
+    training_history = (user.training_history or {}) | {f"Seance {user.current_training}": user.current_training_results}
+    filter = {'name': item.name}
+    update = {'$inc': {'current_training': 1},
+               '$set': {'training_history': training_history, 'current_training_results': None}}
+    
+    DB["profile"].update_one(filter, update)
+    print(DB["profile"].find_one(filter))
 
-    if not training_history:
-        training_history = {}
+@trainings_router.get("/get_current_training_results")
+def get_current_training_results(username: str):
+    filter = {'name': username}
+    projection = {"current_training_results": 1, "_id": 0}
+    if training_result := DB["profile"].find_one(filter, projection).get('current_training_results'):
+        return TypeAdapter(WorkoutResults).validate_python(training_result)
+    return None
 
-    training_history = training_history | {f"Seance {user.current_training}": item.validatedSets}
+
+@trainings_router.post("/validate_set")
+def validate_set(item: ValidatedSetResponse) -> None:
+    user = get_profile(item.name)
+    current_training_results = user.current_training_results
+
+    if not current_training_results:
+        current_training_results = {}
+
+    validated_exercises = current_training_results.get(item.validated.exerciseName, {})
+    new_exercise_results = validated_exercises | {str(item.validated.id): item.isValidated}
+    set_result: WorkoutResults = {item.validated.exerciseName: new_exercise_results}
+    
+    current_training_results = current_training_results | set_result
+    TypeAdapter(WorkoutResults).validate_python(current_training_results)
 
     filter = {'name': item.name}
-    update = {'$inc': {'current_training': 1}, '$set': {'training_history': training_history}}
-    
+    update = {'$set': {'current_training_results': current_training_results}}
     DB["profile"].update_one(filter, update)
