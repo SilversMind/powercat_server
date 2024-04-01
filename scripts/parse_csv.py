@@ -1,10 +1,13 @@
 from pathlib import Path
 import json
+import shortuuid
+
 NAME_MAPPING = {'S': 'squat', 'B': 'bench', 'D': 'deadlift'}
 
 with open(Path(__file__).parent / "prog1.csv") as prog_fin:
-    program = []
-    id = 0
+    programs = []
+    trainings = []
+    training_position = 0
     exercises = []
     program_id = None
     for line in prog_fin.readlines():
@@ -15,16 +18,19 @@ with open(Path(__file__).parent / "prog1.csv") as prog_fin:
             program_id = int(line.rsplit(',')[0].split(' ')[-1])
         if line.startswith("Entrainement"):
             if exercises:
-                program.append({"id":id , "exercises": exercises, "programId": program_id})
+                trainings.append({"training_position":training_position , "exercises": exercises, "id": shortuuid.uuid()})
                 exercises = []
             
-            id += 1
+            training_position += 1
         if line.startswith(('S', 'B', 'D')):
             try:
                 type, set, reps, rpe = line.split(',')
                 if type in NAME_MAPPING:
-                    exercises.append({"exerciseName": NAME_MAPPING[type], "set": int(set), "reps": int(reps), "rpe": float(rpe)})
+                    sets = []
+                    for i in range(int(set)):
+                        sets.append({"id": shortuuid.uuid(), "reps": int(reps), "rpe":float(rpe)})
+                    exercises.append({"name": NAME_MAPPING[type], "sets": sets})
             except ValueError:
                 pass
-with open(Path(__file__).parent /"program1.json", "w") as prog_fout:
-    json.dump(program, prog_fout)
+with open(Path(__file__).parent /"testprogram1.json", "w") as prog_fout:
+    json.dump(trainings, prog_fout)

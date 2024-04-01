@@ -1,37 +1,33 @@
 from pydantic import BaseModel
 from typing import Dict, Optional
 
-ExerciseResults = Dict[str, bool] # set n: bool
-WorkoutResults = Optional[Dict[str, ExerciseResults]] # exercice n : ExerciceResults
-TrainingHistory = Optional[Dict[str, WorkoutResults]] # Seance n : WorkoutResults
-
-class SetContent(BaseModel):
-    id: int
-    reps: int
-    rpe: float
-    weight: float = None
-    exerciseName: str
-
-class Exercise(BaseModel):
-    exerciseName: str
-    set: int
-    reps: int
-    rpe: float
-    weight: float = None
-
-class Training(BaseModel):
-    id: int
-    exercises: list[Exercise]
-    programId: int
-
-class DetailedTraining(Training):
-    nbTrainings: int
 
 class TrainingResult(BaseModel):
     name: str
-    validatedSets: WorkoutResults
+
+class Set(BaseModel):
+    id: str
+    reps: int
+    rpe: float
+    weight: Optional[float or None] = None
+    is_validated: Optional[bool or None] = None
+
+class Exercise(BaseModel):
+    name: str
+    sets: list[Set]
+
+class Training(BaseModel):
+    id: str
+    training_position: int # Séance numéro x
+    exercises: list[Exercise]
+
+class Program(BaseModel):
+    id: str
+    trainings: list[Training]
 
 class ValidatedSetResponse(BaseModel):
     name: str
-    validated: SetContent
+    validated: Set
     isValidated: bool
+    exerciseName: str
+    trainingId: str

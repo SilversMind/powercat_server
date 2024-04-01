@@ -16,6 +16,6 @@ def get_profile(username: str):
 
 @profile_router.get("/active-users", response_model=list[str])
 def get_active_users():
-    filter = {'is_active': True}
+    filter = {'isActive': True}
     projection = {"_id":0}
     return [Profile(**profile).name for profile in DB["profile"].find(filter, projection)]

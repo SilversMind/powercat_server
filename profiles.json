@@ -9,7 +9,7 @@
         "current_training": 1,
         "current_program": 1,
         "training_history": null,
-        "is_active": true
+        "isActive": true
     },
     {
         "name": "Zouzou",
@@ -21,6 +21,6 @@
         "current_training": 7,
         "current_program": 1,
         "training_history": null,
-        "is_active": true
+        "isActive": true
     }
 ]
