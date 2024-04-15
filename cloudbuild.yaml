@@ -1,0 +1,17 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/polished-leaf-317713/powercat-server', '.' ]
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'gcr.io/polished-leaf-317713/powercat-server' ]
+  # Deploy container image to Cloud Run via Github
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [ 'run', 'deploy', 'powercat-server', '--image', 'gcr.io/polished-leaf-317713/powercat-server', '--region', 'europe-west1']
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+serviceAccount: agent-cloud-build-327@polished-leaf-317713.iam.gserviceaccount.com
+images:
+  - gcr.io/polished-leaf-317713/powercat-server
