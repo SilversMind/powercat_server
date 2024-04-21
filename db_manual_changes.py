@@ -43,24 +43,25 @@ def reset_last_session_index() -> None:
 
 # Create a new client and connect to the server
 client = MongoClient(DB_URI, server_api=ServerApi("1"))
+db = client["powercat"]
+collection : Collection = db["training"] 
+import_data(filename="testprogram1.json", collection=collection)
+print()
 # Send a ping to confirm a successful connection
-try:
-    database_names = client.list_database_names()
-    db = client["powercat"]
-    collection = db["trainingHistory"]
-    filters = [
-        {"$match": {"name": "Lolo"}},
-        {"$unwind": "$training_history"},
-        {"$match": {"training_history.training_position": 1}},
-        {"$replaceRoot": {"newRoot": "$training_history"}},
-    ]
-    set_training(db["profile"], "Lolo", program_id=1, training_id=10)
+# try:
+#     database_names = client.list_database_names()
+#     db = client["powercat"]
+#     collection = db["trainingHistory"]
+#     filters = [
+#         {"$match": {"name": "Lolo"}},
+#         {"$unwind": "$training_history"},
+#         {"$match": {"training_history.training_position": 1}},
+#         {"$replaceRoot": {"newRoot": "$training_history"}},
+#     ]
+#     set_training(db["profile"], "Lolo", program_id=1, training_id=10)
 
     # training = next(collection.aggregate(filters))
     # print(training)
     # reset_last_session_index()
     # reset_app_dbs()
 
-
-except Exception as e:
-    print(e)

@@ -1,6 +1,8 @@
 [
     {
         "program_id": 1,
+        "name": "Peaking I",
+        "category": "Peaking",
         "trainings": [
             {
                 "training_position": 1,
@@ -777,6 +779,8 @@
     },
     {
         "program_id": 2,
+        "name": "Technique I",
+        "category": "Technique",
         "trainings": [
             {
                 "training_position": 1,
