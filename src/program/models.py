@@ -10,3 +10,7 @@ class Program(BaseModel):
 
 class Programs(BaseModel):
     programs : list[Program]
+
+class SelectedProgram(BaseModel):
+    username: str
+    program_id: int

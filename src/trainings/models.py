@@ -26,7 +26,7 @@ class Program(BaseModel):
     trainings: list[Training]
 
 class ValidatedSetResponse(BaseModel):
-    name: str
+    username: str
     validated: Set
     isValidated: bool
     exerciseName: str

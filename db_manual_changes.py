@@ -44,9 +44,14 @@ def reset_last_session_index() -> None:
 # Create a new client and connect to the server
 client = MongoClient(DB_URI, server_api=ServerApi("1"))
 db = client["powercat"]
-collection : Collection = db["training"] 
-import_data(filename="testprogram1.json", collection=collection)
-print()
+collection : Collection = db["profile"] 
+# import_data(filename="testprogram1.json", collection=collection)
+filter = {"name": "Lolo"}
+update = {
+    "$set": {"current_program": 1}
+}
+# collection.update_one(filter=filter, update=update)
+print(collection.find_one(filter=filter))
 # Send a ping to confirm a successful connection
 # try:
 #     database_names = client.list_database_names()

@@ -1,5 +1,14 @@
-from src.database import DB
+from src.profile.models import Profile
+from src.trainings.models import Training
 MINIMUM_WEIGHT_STEP = 2.5
+
+def generate_weight(user: Profile, training: Training):
+    for exercise in training.exercises:
+        for set in exercise.sets:
+            set.weight = compute_pr_by_repetition_number(
+                user.PR[exercise.name], set.reps, set.rpe
+            )
+    return training
 
 def compute_pr_by_repetition_number(PR: int, repetitions: int, rpe: int) -> int:
     raw_nbr = PR * pow(0.96, repetitions)*pow(0.96, 10-rpe)

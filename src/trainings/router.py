@@ -6,8 +6,9 @@ from src.trainings.models import (
     ValidatedSetResponse,
     Training,
 )
-from src.program.router import get_program
+from src.profile.models import Profile
 
+from src.program.router import get_program
 from src.trainings.utils import compute_pr_by_repetition_number
 from src.profile.router import get_profile
 from pydantic import TypeAdapter
@@ -17,6 +18,7 @@ trainings_router = APIRouter(prefix="/training")
 
 def get_training_history(username: str):
     return DB["trainingHistory"].find_one({"name": username})["training_history"]
+
 
 
 @trainings_router.get("")
