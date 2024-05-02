@@ -49,7 +49,7 @@ def get_current_training(username: str):
 
 def generate_user_training(username: str) -> Training:
     user = get_profile(username)
-    test_training = Training.model_validate(
+    training = Training.model_validate(
         DB["training"].find_one(
             {
                 "program_id": user.current_program,
@@ -59,12 +59,12 @@ def generate_user_training(username: str) -> Training:
         )["trainings"][0]
     )
 
-    for exercise in test_training.exercises:
+    for exercise in training.exercises:
         for set in exercise.sets:
             set.weight = compute_pr_by_repetition_number(
                 user.PR[exercise.name], set.reps, set.rpe
             )
-    return test_training
+    return training
 
 
 @trainings_router.post("/finish")
@@ -76,19 +76,20 @@ def update_training_id(item: TrainingResult) -> None:
         update = {
             "$inc": {"current_training": 1},
         }
+        next_training = generate_user_training(item.name)
+        DB["trainingHistory"].update_one(
+        {"name": item.name}, {"$push": {"training_history": next_training.model_dump()}}
+    )
+
    
     else:
         filter = {"name": item.name}
         update = {
-            "$inc": {"current_program": 1},
-            "$set": {"current_training": 1}
+            "$set": {"current_training": 1, "current_program": None}
         }
 
     DB["profile"].update_one(filter, update)
-    next_training = generate_user_training(item.name)
-    DB["trainingHistory"].update_one(
-        {"name": item.name}, {"$push": {"training_history": next_training.model_dump()}}
-    )
+    
 
 @trainings_router.get("/get_current_training_results")
 def get_current_training_results(username: str):
@@ -113,7 +114,7 @@ def validate_set(item: ValidatedSetResponse) -> None:
         is_validated=item.isValidated,
     )
     filter = {
-        "name": item.name,
+        "name": item.username,
         "training_history.id": item.trainingId,
         "training_history.exercises.name": item.exerciseName,
         "training_history.exercises.sets.id": item.validated.id,

@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from src.program.models import Program, Programs, SelectedProgram
 from src.trainings.models import Training
 from src.database import DB
@@ -32,11 +32,15 @@ def get_programs(username: str) -> list[Program]:
 def update_programs(selected_program: SelectedProgram) -> None:
     filter = {"name": selected_program.username}
     update = {
-        "$set": {"current_program": selected_program.program_id}
+        "$set": {"current_program": selected_program.program_id},
     }
     DB["profile"].update_one(filter=filter, update=update)
 
 @program_router.get("")
 def get_current_program(username: str) -> Program:
     user = get_profile(username)
-    return get_program(user.current_program)
+    if not user.current_program:
+        return Response(status_code=204)
+    
+    program_data = get_program(user.current_program)
+    return program_data.model_dump()

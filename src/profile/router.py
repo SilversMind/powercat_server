@@ -6,7 +6,7 @@ from typing import List
 profile_router = APIRouter(prefix="/profile")
 
 @profile_router.get("/", response_model=Profile)
-def get_profile(username: str):
+def get_profile(username: str) -> Profile:
     filter = {'name': username}
     projection = {"_id":0}
     profile = DB["profile"].find_one(filter, projection)
