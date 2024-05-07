@@ -4,7 +4,7 @@ import shortuuid
 
 NAME_MAPPING = {'S': 'squat', 'B': 'bench', 'D': 'deadlift'}
 
-with open(Path(__file__).parent / "prog1.csv") as prog_fin:
+with open(Path(__file__).parent / "prog_force_lolo.csv") as prog_fin:
     programs = []
     trainings = []
     training_position = 0
@@ -32,5 +32,5 @@ with open(Path(__file__).parent / "prog1.csv") as prog_fin:
                     exercises.append({"name": NAME_MAPPING[type], "sets": sets})
             except ValueError:
                 pass
-with open(Path(__file__).parent /"testprogram1.json", "w") as prog_fout:
+with open(Path(__file__).parent /"program_lolo.json", "w") as prog_fout:
     json.dump(trainings, prog_fout)
