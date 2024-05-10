@@ -10,7 +10,6 @@ program_router = APIRouter(prefix="/program")
 
 def get_program(program_id: int) -> Program:
     program_data = DB["training"].find_one({"program_id": program_id})
-
     blocks = None
     if db_blocks := program_data.get("blocks"):
         blocks = generate_blocks(db_blocks)
